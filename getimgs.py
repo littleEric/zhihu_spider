@@ -67,9 +67,8 @@ def get_imgs(id):
 ##过滤非法文件
 def rm_other_files(dirlist):
     ##传入dir_list引用
-    for i in range(0,len(dirlist)):
-        if not re.match("\d+-\d+.jpg",dirlist[i]):
-            del dirlist[i]
+    dirlist = list(filter(lambda x:re.match("\d+-\d+.jpg",x),dirlist))
+    return dirlist
 ##根据文件名计算出index
 def getindex(filename):
     offset = int(filename[:filename.index('-')])
@@ -83,7 +82,7 @@ def get_last_offset(list):
 ##程序运行入口
 def runpro():
     global dir_list,offset
-    rm_other_files(dir_list)
+    dir_list = rm_other_files(dir_list)
     if not len(dir_list) == 0:
         # print(getindex("450-1.jpg"))
         dir_list.sort(key=lambda dir: getindex(dir))
