@@ -15,7 +15,7 @@ def getsrc(html):
     #img_tags = bsObj.find_all("img",{"src":re.compile("\.zhimg\.com.*_b")})
     img_tags = bsObj.find_all("img", {"class":"origin_image","src":re.compile("\.zhimg\.com.*_b")})
     for img_tag in img_tags:
-        srcs.append(img_tag['src'])
+        srcs.append(img_tag['data-original'])
     return srcs
 ##写文件
 def writefile(filename,data):
@@ -67,7 +67,7 @@ def get_imgs(id):
 ##过滤非法文件
 def rm_other_files(dirlist):
     ##传入dir_list引用
-    for i in range(0,len(dirlist)-1):
+    for i in range(0,len(dirlist)):
         if not re.match("\d+-\d+.jpg",dirlist[i]):
             del dirlist[i]
 ##根据文件名计算出index
@@ -84,9 +84,10 @@ def get_last_offset(list):
 def runpro():
     global dir_list,offset
     rm_other_files(dir_list)
-    # print(getindex("450-1.jpg"))
-    dir_list.sort(key=lambda dir: getindex(dir))
-    offset = get_last_offset(dir_list)
+    if not len(dir_list) == 0:
+        # print(getindex("450-1.jpg"))
+        dir_list.sort(key=lambda dir: getindex(dir))
+        offset = get_last_offset(dir_list)
     while 1:
         get_imgs(52570020)
 runpro()
