@@ -23,6 +23,14 @@ def writefile(filename,data):
     file.write(data)
     file.flush()
     file.close()
+def get_img_data(src):
+    try:
+        data = requests.get(src).content
+    except requests.exceptions.ConnectionError:
+        get_img_data(src)
+    except requests.exceptions.ChunkedEncodingError:
+        get_img_data(src)
+    return data
 def get_imgs(id):
     global offset,temp
     url = "https://www.zhihu.com/question/"+str(id)
@@ -49,7 +57,7 @@ def get_imgs(id):
         exit()
     for msg in msgs:
         for src in getsrc(msg):
-            data = requests.get(src).content
+            data = get_img_data(src)
             filename = storepath +"/" + str(offset) + "-" + str(temp) + ".jpg"
             writefile(filename, data)
             temp = temp + 1
